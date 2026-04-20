@@ -155,6 +155,10 @@
         <input class="form-input" type="text" id="gymName" placeholder="Your gym's name" autocomplete="organization">
       </div>
       <div class="form-row">
+        <label class="form-label" for="phone">Phone number</label>
+        <input class="form-input" type="tel" id="phone" placeholder="04XX XXX XXX" autocomplete="tel">
+      </div>
+      <div class="form-row">
         <label class="form-label" for="email">Email address</label>
         <input class="form-input" type="email" id="email" placeholder="you@yourgym.com" autocomplete="email">
       </div>
@@ -324,9 +328,21 @@
     const first = document.getElementById('firstName').value.trim();
     const gym = document.getElementById('gymName').value.trim();
     const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
     if (!first || !gym || !email) { alert('Please fill in all fields to continue.'); return; }
     if (!email.includes('@') || !email.includes('.')) { alert('Please enter a valid email address.'); return; }
-    answers.firstName = first; answers.gymName = gym; answers.email = email;
+    answers.firstName = first; answers.gymName = gym; answers.email = email; answers.phone = phone;
+    // Post to GHL form silently
+    const formData = new FormData();
+    formData.append('first_name', first);
+    formData.append('email', email);
+    formData.append('phone', phone);
+    formData.append('company_name', gym);
+    fetch('https://api.leadconnectorhq.com/widget/form/ep5Zti72drPUaTFJrjQV', {
+      method: 'POST',
+      body: formData,
+      mode: 'no-cors'
+    }).catch(function(){});
     goTo('q1');
   }
 
@@ -372,7 +388,8 @@
   }
 
   document.getElementById('firstName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('gymName').focus(); });
-  document.getElementById('gymName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('email').focus(); });
+  document.getElementById('gymName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('phone').focus(); });
+  document.getElementById('phone').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('email').focus(); });
   document.getElementById('email').addEventListener('keydown', e => { if(e.key==='Enter') startAudit(); });
 </script>
 </body>
