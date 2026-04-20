@@ -136,36 +136,10 @@
       <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
     </div>
 
-    <div class="screen active" id="screen-intro">
-      <p class="eyebrow">Free Gym Growth Audit</p>
-      <h1 class="hero-heading">There's money sitting in your database right now. Let's find out how much.</h1>
-      <p class="hero-sub">Six questions. Two minutes. At the end you'll see a dollar figure based on your actual numbers — and a clear path to recovering it.</p>
-      <ul class="feature-list">
-        <li>Takes less than 2 minutes</li>
-        <li>See your dormant member revenue estimate instantly</li>
-        <li>Find out exactly where your growth is leaking</li>
-        <li>No cost. No obligation.</li>
-      </ul>
-      <div class="form-row">
-        <label class="form-label" for="firstName">First name</label>
-        <input class="form-input" type="text" id="firstName" placeholder="Your first name" autocomplete="given-name">
-      </div>
-      <div class="form-row">
-        <label class="form-label" for="gymName">Gym name</label>
-        <input class="form-input" type="text" id="gymName" placeholder="Your gym's name" autocomplete="organization">
-      </div>
-      <div class="form-row">
-        <label class="form-label" for="phone">Phone number</label>
-        <input class="form-input" type="tel" id="phone" placeholder="04XX XXX XXX" autocomplete="tel">
-      </div>
-      <div class="form-row">
-        <label class="form-label" for="email">Email address</label>
-        <input class="form-input" type="email" id="email" placeholder="you@yourgym.com" autocomplete="email">
-      </div>
-      <button class="btn-primary" onclick="startAudit()">Start the audit →</button>
+    <div class="screen" id="screen-intro">
     </div>
 
-    <div class="screen" id="screen-q1">
+    <div class="screen active" id="screen-q1">
       <p class="q-number">Question 1 of 6</p>
       <h2 class="q-text">How long has your gym been open?</h2>
       <p class="q-hint">Longer history means a larger pool of past contacts to reactivate.</p>
@@ -177,7 +151,7 @@
         <button class="opt" onclick="selectOption(this,'years',12)"><span class="opt-dot"></span>More than 10 years</button>
       </div>
       <button class="btn-primary" id="next-q1" onclick="goTo('q2')" disabled>Next →</button>
-      <button class="btn-back" onclick="goTo('intro')">← Back</button>
+
     </div>
 
     <div class="screen" id="screen-q2">
@@ -324,6 +298,12 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // Show progress bar on load since we start at q1
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('progressWrap').classList.add('visible');
+    updateProgress(1);
+  });
+
   function startAudit() {
     const first = document.getElementById('firstName').value.trim();
     const gym = document.getElementById('gymName').value.trim();
@@ -389,10 +369,7 @@
     goTo('results');
   }
 
-  document.getElementById('firstName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('gymName').focus(); });
-  document.getElementById('gymName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('phone').focus(); });
-  document.getElementById('phone').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('email').focus(); });
-  document.getElementById('email').addEventListener('keydown', e => { if(e.key==='Enter') startAudit(); });
+
 </script>
 </body>
 </html>
