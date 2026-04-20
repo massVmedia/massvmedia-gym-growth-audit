@@ -332,15 +332,17 @@
     if (!first || !gym || !email) { alert('Please fill in all fields to continue.'); return; }
     if (!email.includes('@') || !email.includes('.')) { alert('Please enter a valid email address.'); return; }
     answers.firstName = first; answers.gymName = gym; answers.email = email; answers.phone = phone;
-    // Post to GHL form silently
-    const formData = new FormData();
-    formData.append('first_name', first);
-    formData.append('email', email);
-    formData.append('phone', phone);
-    formData.append('company_name', gym);
-    fetch('https://api.leadconnectorhq.com/widget/form/ep5Zti72drPUaTFJrjQV', {
+    // Post to GHL webhook silently
+    const payload = JSON.stringify({
+      first_name: first,
+      email: email,
+      phone: phone,
+      gym_name: gym
+    });
+    fetch('https://services.leadconnectorhq.com/hooks/5CejxkFTuJF0gSk07TYe/webhook-trigger/cac09eb3-8b31-4541-ab7d-ab895c96dd42', {
       method: 'POST',
-      body: formData,
+      headers: { 'Content-Type': 'application/json' },
+      body: payload,
       mode: 'no-cors'
     }).catch(function(){});
     goTo('q1');
