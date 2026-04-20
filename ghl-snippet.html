@@ -1,0 +1,486 @@
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+body { background: #2B2B2B !important; margin: 0 !important; padding: 0 !important; }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #2B2B2B;
+    --bg-card: #333333;
+    --bg-input: #3A3A3A;
+    --orange: #E8601C;
+    --orange-dim: rgba(232,96,28,0.12);
+    --white: #F5F4F0;
+    --grey: #888884;
+    --border: rgba(255,255,255,0.08);
+    --border-mid: rgba(255,255,255,0.14);
+  }
+  html { font-size: 16px; }
+  body { background: var(--bg); color: var(--white); font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
+
+  nav { padding: 1.25rem 2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: #262624; }
+  .logo { display: flex; align-items: center; text-decoration: none; }
+  .logo img { height: 44px; width: auto; display: block; }
+  .nav-badge { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey); border: 1px solid var(--border-mid); border-radius: 4px; padding: 4px 10px; }
+
+  main { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 3.5rem 1.5rem 6rem; }
+  .container { width: 100%; max-width: 540px; }
+
+  .progress-wrap { margin-bottom: 2.75rem; display: none; }
+  .progress-wrap.visible { display: block; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey); margin-bottom: 0.6rem; }
+  .progress-bar { height: 2px; background: var(--border-mid); border-radius: 2px; }
+  .progress-fill { height: 2px; background: var(--orange); border-radius: 2px; transition: width 0.45s ease; }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeUp 0.28s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+
+  .eyebrow { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); margin-bottom: 1.1rem; }
+  .hero-heading { font-size: clamp(1.9rem, 5.5vw, 2.75rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; color: var(--white); margin-bottom: 1.1rem; }
+  .hero-sub { font-size: 0.95rem; line-height: 1.7; color: var(--grey); margin-bottom: 2rem; }
+  .feature-list { list-style: none; margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 0.65rem; }
+  .feature-list li { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; color: rgba(245,244,240,0.65); }
+  .feature-list li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+
+  .form-row { margin-bottom: 0.9rem; }
+  .form-label { display: block; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey); margin-bottom: 0.45rem; }
+  .form-input { width: 100%; padding: 0.875rem 1rem; background: var(--bg-input); border: 1px solid var(--border-mid); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--white); outline: none; transition: border-color 0.15s; -webkit-appearance: none; }
+  .form-input:focus { border-color: var(--orange); }
+  .form-input::placeholder { color: rgba(136,136,132,0.5); }
+
+  .btn-primary { display: block; width: 100%; background: var(--orange); color: var(--white); border: none; border-radius: 8px; padding: 1rem 2rem; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: opacity 0.15s; text-align: center; text-decoration: none; margin-top: 1.5rem; }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-primary:disabled { opacity: 0.2; cursor: default; }
+  .btn-back { background: none; border: none; font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--grey); cursor: pointer; padding: 0; margin-top: 1rem; display: block; transition: color 0.15s; }
+  .btn-back:hover { color: var(--white); }
+
+  .q-number { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange); margin-bottom: 0.8rem; }
+  .q-text { font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; color: var(--white); margin-bottom: 0.5rem; }
+  .q-hint { font-size: 0.83rem; color: var(--grey); margin-bottom: 1.75rem; line-height: 1.55; }
+
+  .options-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.75rem; }
+  .opt { background: var(--bg-card); border: 1px solid var(--border-mid); border-radius: 8px; padding: 0.875rem 1.1rem; font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 500; color: rgba(245,244,240,0.75); text-align: left; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 12px; }
+  .opt:hover { border-color: var(--orange); color: var(--white); }
+  .opt.selected { border-color: var(--orange); background: var(--orange-dim); color: var(--white); }
+  .opt-dot { width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid var(--border-mid); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .opt.selected .opt-dot { border-color: var(--orange); background: var(--orange); }
+  .opt.selected .opt-dot::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--white); }
+
+  .number-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 1.75rem; }
+  .number-prefix { font-size: 1.75rem; font-weight: 900; color: var(--grey); }
+  .number-input { width: 160px; padding: 0.7rem 1rem; background: var(--bg-input); border: 1px solid var(--border-mid); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 1.85rem; font-weight: 900; color: var(--white); text-align: center; outline: none; -webkit-appearance: none; -moz-appearance: textfield; transition: border-color 0.15s; letter-spacing: -0.02em; }
+  .number-input::-webkit-inner-spin-button, .number-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .number-input:focus { border-color: var(--orange); }
+  .number-suffix { font-size: 0.82rem; color: var(--grey); font-weight: 500; }
+
+  .result-tag { display: inline-block; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid rgba(232,96,28,0.4); border-radius: 4px; padding: 4px 10px; color: var(--orange); margin-bottom: 1.1rem; background: var(--orange-dim); }
+  .result-heading { font-size: clamp(1.75rem, 5vw, 2.4rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; color: var(--white); margin-bottom: 0.75rem; }
+  .result-sub { font-size: 0.9rem; line-height: 1.7; color: var(--grey); margin-bottom: 2rem; }
+
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem; }
+  .stat-card-label { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey); margin-bottom: 0.6rem; }
+  .stat-card-value { font-size: 1.85rem; font-weight: 900; color: var(--white); line-height: 1; letter-spacing: -0.02em; }
+  .stat-card-note { font-size: 0.68rem; color: var(--grey); margin-top: 5px; line-height: 1.45; }
+
+  .highlight-box { border: 1px solid var(--orange); border-radius: 12px; padding: 1.5rem; margin-bottom: 10px; background: var(--orange-dim); }
+  .highlight-label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,96,28,0.65); margin-bottom: 0.6rem; }
+  .highlight-value { font-size: 2.9rem; font-weight: 900; color: var(--white); line-height: 1; margin-bottom: 0.35rem; letter-spacing: -0.03em; }
+  .highlight-note { font-size: 0.78rem; color: rgba(245,244,240,0.5); line-height: 1.55; }
+
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  .findings { margin-bottom: 1.75rem; }
+  .findings-label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey); margin-bottom: 0.75rem; }
+  .finding-row { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+  .finding-key { color: var(--grey); }
+  .finding-val { font-weight: 600; color: var(--white); }
+
+  .cta-box { background: var(--bg-card); border: 1px solid var(--border-mid); border-radius: 12px; padding: 1.75rem; }
+  .cta-heading { font-size: 1.25rem; font-weight: 800; color: var(--white); margin-bottom: 0.6rem; letter-spacing: -0.02em; }
+  .cta-text { font-size: 0.88rem; color: var(--grey); line-height: 1.7; }
+
+  footer { padding: 1.5rem 2rem; border-top: 1px solid var(--border); text-align: center; }
+  .footer-text { font-size: 0.7rem; color: var(--grey); }
+  .footer-text a { color: var(--grey); text-decoration: none; }
+  .footer-text a:hover { color: var(--orange); }
+
+  @media (max-width: 480px) {
+    main { padding: 2rem 1.25rem 4rem; }
+    nav { padding: 1rem 1.25rem; }
+    .stat-grid { grid-template-columns: 1fr; }
+    .highlight-value { font-size: 2.3rem; }
+  }
+
+</style>
+
+
+<nav>
+  <a class="logo" href="#"><img src="https://massvmedia.github.io/massvmedia-gym-growth-audit/logo.png" alt="massVmedia Growth Systems"></a>
+  <span class="nav-badge">Gym Growth Audit</span>
+</nav>
+
+<main>
+  <div class="container">
+
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-meta">
+        <span id="progressLabel">Question 1 of 6</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="screen active" id="screen-intro">
+      <p class="eyebrow">Free Gym Growth Audit</p>
+      <h1 class="hero-heading">There's money sitting in your database right now. Let's find out how much.</h1>
+      <p class="hero-sub">Six questions. Two minutes. At the end you'll see a dollar figure based on your actual numbers — and a clear path to recovering it.</p>
+      <ul class="feature-list">
+        <li>Takes less than 2 minutes</li>
+        <li>See your dormant member revenue estimate instantly</li>
+        <li>Find out exactly where your growth is leaking</li>
+        <li>No cost. No obligation.</li>
+      </ul>
+      <div class="form-row">
+        <label class="form-label" for="firstName">First name</label>
+        <input class="form-input" type="text" id="firstName" placeholder="Your first name" autocomplete="given-name">
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="gymName">Gym name</label>
+        <input class="form-input" type="text" id="gymName" placeholder="Your gym's name" autocomplete="organization">
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="phone">Phone number</label>
+        <input class="form-input" type="tel" id="phone" placeholder="04XX XXX XXX" autocomplete="tel">
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="email">Email address</label>
+        <input class="form-input" type="email" id="email" placeholder="you@yourgym.com" autocomplete="email">
+      </div>
+      <button class="btn-primary" onclick="startAudit()">Start the audit →</button>
+    </div>
+
+    <div class="screen" id="screen-q1">
+      <p class="q-number">Question 1 of 6</p>
+      <h2 class="q-text">How long has your gym been open?</h2>
+      <p class="q-hint">Longer history means a larger pool of past contacts to reactivate.</p>
+      <div class="options-grid">
+        <button class="opt" onclick="selectOption(this,'years',1)"><span class="opt-dot"></span>Less than 2 years</button>
+        <button class="opt" onclick="selectOption(this,'years',3)"><span class="opt-dot"></span>2–4 years</button>
+        <button class="opt" onclick="selectOption(this,'years',6)"><span class="opt-dot"></span>5–7 years</button>
+        <button class="opt" onclick="selectOption(this,'years',9)"><span class="opt-dot"></span>8–10 years</button>
+        <button class="opt" onclick="selectOption(this,'years',12)"><span class="opt-dot"></span>More than 10 years</button>
+      </div>
+      <button class="btn-primary" id="next-q1" onclick="goTo('q2')" disabled>Next →</button>
+      <button class="btn-back" onclick="goTo('intro')">← Back</button>
+    </div>
+
+    <div class="screen" id="screen-q2">
+      <p class="q-number">Question 2 of 6</p>
+      <h2 class="q-text">How many active members do you have right now?</h2>
+      <p class="q-hint">Current paying members only — not past or trial members.</p>
+      <div class="number-wrap">
+        <input class="number-input" type="number" id="activeInput" min="0" placeholder="0" oninput="validateNumber('active','next-q2')">
+        <span class="number-suffix">active members</span>
+      </div>
+      <button class="btn-primary" id="next-q2" onclick="goTo('q3')" disabled>Next →</button>
+      <button class="btn-back" onclick="goTo('q1')">← Back</button>
+    </div>
+
+    <div class="screen" id="screen-q3">
+      <p class="q-number">Question 3 of 6</p>
+      <h2 class="q-text">How many total contacts are in your database?</h2>
+      <p class="q-hint">Past members, trials, enquiries — everyone who's come through the door in any form.</p>
+      <div class="number-wrap">
+        <input class="number-input" type="number" id="databaseInput" min="0" placeholder="0" oninput="validateNumber('database','next-q3')">
+        <span class="number-suffix">total contacts</span>
+      </div>
+      <button class="btn-primary" id="next-q3" onclick="goTo('q4')" disabled>Next →</button>
+      <button class="btn-back" onclick="goTo('q2')">← Back</button>
+    </div>
+
+    <div class="screen" id="screen-q4">
+      <p class="q-number">Question 4 of 6</p>
+      <h2 class="q-text">What's your average weekly membership price?</h2>
+      <p class="q-hint">A rough figure is fine — used to calculate your revenue opportunity.</p>
+      <div class="number-wrap">
+        <span class="number-prefix">$</span>
+        <input class="number-input" type="number" id="priceInput" min="0" placeholder="0" oninput="validateNumber('price','next-q4')">
+        <span class="number-suffix">per week</span>
+      </div>
+      <button class="btn-primary" id="next-q4" onclick="goTo('q5')" disabled>Next →</button>
+      <button class="btn-back" onclick="goTo('q3')">← Back</button>
+    </div>
+
+    <div class="screen" id="screen-q5">
+      <p class="q-number">Question 5 of 6</p>
+      <h2 class="q-text">When did you last reach out to your inactive contacts?</h2>
+      <p class="q-hint">Be honest — this is just for your own clarity.</p>
+      <div class="options-grid">
+        <button class="opt" onclick="selectOption(this,'lastContact','Never')"><span class="opt-dot"></span>Never</button>
+        <button class="opt" onclick="selectOption(this,'lastContact','More than a year ago')"><span class="opt-dot"></span>More than a year ago</button>
+        <button class="opt" onclick="selectOption(this,'lastContact','6–12 months ago')"><span class="opt-dot"></span>6–12 months ago</button>
+        <button class="opt" onclick="selectOption(this,'lastContact','Within the last 6 months')"><span class="opt-dot"></span>Within the last 6 months</button>
+      </div>
+      <button class="btn-primary" id="next-q5" onclick="goTo('q6')" disabled>Next →</button>
+      <button class="btn-back" onclick="goTo('q4')">← Back</button>
+    </div>
+
+    <div class="screen" id="screen-q6">
+      <p class="q-number">Question 6 of 6</p>
+      <h2 class="q-text">Are you currently running any paid advertising?</h2>
+      <p class="q-hint"></p>
+      <div class="options-grid">
+        <button class="opt" onclick="selectOption(this,'ads','No paid advertising at all')"><span class="opt-dot"></span>No paid advertising at all</button>
+        <button class="opt" onclick="selectOption(this,'ads','Tried it but stopped')"><span class="opt-dot"></span>Tried it but stopped</button>
+        <button class="opt" onclick="selectOption(this,'ads','Running ads occasionally')"><span class="opt-dot"></span>Running ads occasionally</button>
+        <button class="opt" onclick="selectOption(this,'ads','Running ads consistently')"><span class="opt-dot"></span>Running ads consistently</button>
+      </div>
+      <button class="btn-primary" id="next-q6" onclick="showResults()" disabled>See my results →</button>
+      <button class="btn-back" onclick="goTo('q5')">← Back</button>
+    </div>
+
+    <div class="screen" id="screen-results">
+      <span class="result-tag">Your audit results</span>
+      <h2 class="result-heading" id="resultHeading">Here's what's sitting in your database</h2>
+      <p class="result-sub">Based on your numbers. Conservative estimates — most reactivation campaigns perform above this floor.</p>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <p class="stat-card-label">Dormant contacts</p>
+          <p class="stat-card-value" id="dormantVal">—</p>
+          <p class="stat-card-note">People who already know your gym</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card-label">Monthly value per member</p>
+          <p class="stat-card-value" id="monthlyVal">—</p>
+          <p class="stat-card-note">At your current pricing</p>
+        </div>
+      </div>
+      <div class="highlight-box">
+        <p class="highlight-label">Conservative recovery — 1% conversion × 6 months</p>
+        <p class="highlight-value" id="conservativeVal">—</p>
+        <p class="highlight-note" id="conservativeNote">Zero new leads required.</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <p class="stat-card-label">Moderate recovery (3%)</p>
+          <p class="stat-card-value" id="moderateVal">—</p>
+          <p class="stat-card-note" id="moderateNote">Still your warm audience only</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-card-label">New leads required</p>
+          <p class="stat-card-value">$0</p>
+          <p class="stat-card-note">Works entirely on your existing database</p>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="findings">
+        <p class="findings-label">Your snapshot</p>
+        <div class="finding-row"><span class="finding-key">Gym</span><span class="finding-val" id="findGym">—</span></div>
+        <div class="finding-row"><span class="finding-key">Active members</span><span class="finding-val" id="findActive">—</span></div>
+        <div class="finding-row"><span class="finding-key">Total database</span><span class="finding-val" id="findDatabase">—</span></div>
+        <div class="finding-row"><span class="finding-key">Weekly membership</span><span class="finding-val" id="findPrice">—</span></div>
+        <div class="finding-row"><span class="finding-key">Last database contact</span><span class="finding-val" id="findLastContact">—</span></div>
+        <div class="finding-row"><span class="finding-key">Paid advertising</span><span class="finding-val" id="findAds">—</span></div>
+      </div>
+      <div class="cta-box">
+        <h3 class="cta-heading">Ready to go after this revenue?</h3>
+        <p class="cta-text">We'll clean your database, segment it by timeframe, build the reactivation offer, and run the campaign. You keep a clean organised database either way.</p>
+        <a class="btn-primary" href="https://api.leadconnectorhq.com/widget/booking/Bx4eXm8Eu1zldM6fcuDt" target="_blank">Book your free 30-minute call →</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <p class="footer-text">massVmedia Growth Systems &nbsp;·&nbsp; <a href="mailto:dane@massvmedia.com">dane@massvmedia.com</a></p>
+</footer>
+
+<script>
+  const answers = {};
+  function fmt(n) { return Math.round(n).toLocaleString('en-AU'); }
+  function fmtDollar(n) { return '$' + Math.round(n).toLocaleString('en-AU'); }
+
+  function updateProgress(step) {
+    const pct = Math.round((step / 6) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = 'Question ' + step + ' of 6';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  function goTo(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    const wrap = document.getElementById('progressWrap');
+    const stepMap = { q1:1, q2:2, q3:3, q4:4, q5:5, q6:6 };
+    if (stepMap[id]) { wrap.classList.add('visible'); updateProgress(stepMap[id]); }
+    else { wrap.classList.remove('visible'); }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function startAudit() {
+    const first = document.getElementById('firstName').value.trim();
+    const gym = document.getElementById('gymName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    if (!first || !gym || !email) { alert('Please fill in all fields to continue.'); return; }
+    if (!email.includes('@') || !email.includes('.')) { alert('Please enter a valid email address.'); return; }
+    answers.firstName = first; answers.gymName = gym; answers.email = email; answers.phone = phone;
+    // Post to GHL webhook silently
+    const payload = JSON.stringify({
+      first_name: first,
+      email: email,
+      phone: phone,
+      gym_name: gym
+    });
+    fetch('https://services.leadconnectorhq.com/hooks/5CejxkFTuJF0gSk07TYe/webhook-trigger/cac09eb3-8b31-4541-ab7d-ab895c96dd42', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload,
+      mode: 'no-cors'
+    }).catch(function(){});
+    goTo('q1');
+  }
+
+  function selectOption(btn, key, value) {
+    btn.closest('.options-grid').querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers[key] = value;
+    const map = { years:'next-q1', lastContact:'next-q5', ads:'next-q6' };
+    if (map[key]) document.getElementById(map[key]).disabled = false;
+  }
+
+  function validateNumber(key, btnId) {
+    const ids = { active:'activeInput', database:'databaseInput', price:'priceInput' };
+    const val = document.getElementById(ids[key]).value;
+    answers[key] = parseInt(val);
+    document.getElementById(btnId).disabled = !(val && parseInt(val) >= 0);
+  }
+
+  function showResults() {
+    const active = answers.active || 0;
+    const database = answers.database || 0;
+    const price = answers.price || 0;
+    const dormant = Math.max(0, database - active);
+    const monthly = price * 4;
+    const c1 = Math.round(dormant * 0.01);
+    const c3 = Math.round(dormant * 0.03);
+    const rev1 = c1 * monthly * 6;
+    const rev3 = c3 * monthly * 6;
+    document.getElementById('resultHeading').textContent = answers.firstName + ', here\'s what\'s sitting in your database';
+    document.getElementById('dormantVal').textContent = fmt(dormant);
+    document.getElementById('monthlyVal').textContent = fmtDollar(monthly);
+    document.getElementById('conservativeVal').textContent = fmtDollar(rev1);
+    document.getElementById('conservativeNote').textContent = fmt(c1) + ' members returning at ' + fmtDollar(monthly) + '/month for 6 months. Zero new leads required.';
+    document.getElementById('moderateVal').textContent = fmtDollar(rev3);
+    document.getElementById('moderateNote').textContent = fmt(c3) + ' members returning — still your warm audience only';
+    document.getElementById('findGym').textContent = answers.gymName;
+    document.getElementById('findActive').textContent = fmt(active);
+    document.getElementById('findDatabase').textContent = fmt(database);
+    document.getElementById('findPrice').textContent = fmtDollar(price) + '/week';
+    document.getElementById('findLastContact').textContent = answers.lastContact || '—';
+    document.getElementById('findAds').textContent = answers.ads || '—';
+    goTo('results');
+  }
+
+  document.getElementById('firstName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('gymName').focus(); });
+  document.getElementById('gymName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('phone').focus(); });
+  document.getElementById('phone').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('email').focus(); });
+  document.getElementById('email').addEventListener('keydown', e => { if(e.key==='Enter') startAudit(); });
+</script>
+
+<script>
+
+  const answers = {};
+  function fmt(n) { return Math.round(n).toLocaleString('en-AU'); }
+  function fmtDollar(n) { return '$' + Math.round(n).toLocaleString('en-AU'); }
+
+  function updateProgress(step) {
+    const pct = Math.round((step / 6) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = 'Question ' + step + ' of 6';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  function goTo(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    const wrap = document.getElementById('progressWrap');
+    const stepMap = { q1:1, q2:2, q3:3, q4:4, q5:5, q6:6 };
+    if (stepMap[id]) { wrap.classList.add('visible'); updateProgress(stepMap[id]); }
+    else { wrap.classList.remove('visible'); }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function startAudit() {
+    const first = document.getElementById('firstName').value.trim();
+    const gym = document.getElementById('gymName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    if (!first || !gym || !email) { alert('Please fill in all fields to continue.'); return; }
+    if (!email.includes('@') || !email.includes('.')) { alert('Please enter a valid email address.'); return; }
+    answers.firstName = first; answers.gymName = gym; answers.email = email; answers.phone = phone;
+    // Post to GHL webhook silently
+    const payload = JSON.stringify({
+      first_name: first,
+      email: email,
+      phone: phone,
+      gym_name: gym
+    });
+    fetch('https://services.leadconnectorhq.com/hooks/5CejxkFTuJF0gSk07TYe/webhook-trigger/cac09eb3-8b31-4541-ab7d-ab895c96dd42', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload,
+      mode: 'no-cors'
+    }).catch(function(){});
+    goTo('q1');
+  }
+
+  function selectOption(btn, key, value) {
+    btn.closest('.options-grid').querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers[key] = value;
+    const map = { years:'next-q1', lastContact:'next-q5', ads:'next-q6' };
+    if (map[key]) document.getElementById(map[key]).disabled = false;
+  }
+
+  function validateNumber(key, btnId) {
+    const ids = { active:'activeInput', database:'databaseInput', price:'priceInput' };
+    const val = document.getElementById(ids[key]).value;
+    answers[key] = parseInt(val);
+    document.getElementById(btnId).disabled = !(val && parseInt(val) >= 0);
+  }
+
+  function showResults() {
+    const active = answers.active || 0;
+    const database = answers.database || 0;
+    const price = answers.price || 0;
+    const dormant = Math.max(0, database - active);
+    const monthly = price * 4;
+    const c1 = Math.round(dormant * 0.01);
+    const c3 = Math.round(dormant * 0.03);
+    const rev1 = c1 * monthly * 6;
+    const rev3 = c3 * monthly * 6;
+    document.getElementById('resultHeading').textContent = answers.firstName + ', here\'s what\'s sitting in your database';
+    document.getElementById('dormantVal').textContent = fmt(dormant);
+    document.getElementById('monthlyVal').textContent = fmtDollar(monthly);
+    document.getElementById('conservativeVal').textContent = fmtDollar(rev1);
+    document.getElementById('conservativeNote').textContent = fmt(c1) + ' members returning at ' + fmtDollar(monthly) + '/month for 6 months. Zero new leads required.';
+    document.getElementById('moderateVal').textContent = fmtDollar(rev3);
+    document.getElementById('moderateNote').textContent = fmt(c3) + ' members returning — still your warm audience only';
+    document.getElementById('findGym').textContent = answers.gymName;
+    document.getElementById('findActive').textContent = fmt(active);
+    document.getElementById('findDatabase').textContent = fmt(database);
+    document.getElementById('findPrice').textContent = fmtDollar(price) + '/week';
+    document.getElementById('findLastContact').textContent = answers.lastContact || '—';
+    document.getElementById('findAds').textContent = answers.ads || '—';
+    goTo('results');
+  }
+
+  document.getElementById('firstName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('gymName').focus(); });
+  document.getElementById('gymName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('phone').focus(); });
+  document.getElementById('phone').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('email').focus(); });
+  document.getElementById('email').addEventListener('keydown', e => { if(e.key==='Enter') startAudit(); });
+
+</script>
